@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows;
 using Microsoft.Data.Sqlite; // Asegúrate de tener Microsoft.Data.Sqlite instalado desde NuGet
+using OfficeOpenXml;
 
 namespace List_note
 {
@@ -11,6 +12,7 @@ namespace List_note
     {
         public MainWindow()
         {
+            ExcelPackage.LicenseContext = LicenseContext.Commercial;
             InitializeComponent();
             CrearBaseDeDatosYTabla(); 
         }

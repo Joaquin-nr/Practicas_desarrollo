@@ -3,6 +3,10 @@ using System;
 using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Input;
+using Microsoft.Win32;
+using OfficeOpenXml;
+using System.Text;
+using System.IO;
 
 namespace List_note
 {
@@ -120,10 +124,126 @@ namespace List_note
             var ventanaEdicion = new EditarNota(NotaSeleccionada);
             ventanaEdicion.ShowDialog(); // Mostrar como cuadro de diálogo
 
-            // Refrescar la lista de notas en caso de que se hayan hecho cambios
-            //CargarNotas();
+            // Después de editar, actualizamos la nota seleccionada en la colección
+            var notaEditada = Notas.FirstOrDefault(n => n.Titulo == NotaSeleccionada.Titulo && n.Descripcion == NotaSeleccionada.Descripcion);
+            if (notaEditada != null)
+            {
+                // La nota se ha actualizado automáticamente en la colección debido a la vinculación (binding)
+                // Si deseas forzar una actualización, puedes reemplazarla aquí:
+                notaEditada.Color = NotaSeleccionada.Color;
+                notaEditada.Titulo = NotaSeleccionada.Titulo;
+                notaEditada.Descripcion = NotaSeleccionada.Descripcion;
+            }
         }
 
+        public void ExportarNotas_Click(object sender, RoutedEventArgs e)
+        {
+            // Abrir el explorador de archivos para elegir la ubicación y nombre del archivo
+            SaveFileDialog saveFileDialog = new SaveFileDialog
+            {
+                Filter = "Archivo de notas (*.notasunison)|*.notasunison",
+                Title = "Exportar notas"
+            };
 
+            if (saveFileDialog.ShowDialog() == true)
+            {
+                // Guardar el archivo .notasunison
+                string filePath = saveFileDialog.FileName;
+                StringBuilder sb = new StringBuilder();
+
+                foreach (var nota in Notas)
+                {
+                    sb.AppendLine($"{nota.Titulo}|{nota.Descripcion}|{nota.Color}"); // Guardamos en formato Titulo|Descripcion|Color
+                }
+
+                // Guardar el archivo .notasunison
+                File.WriteAllText(filePath, sb.ToString());
+
+                // Guardar el archivo .xlsx (con la misma información)
+                string excelFilePath = Path.ChangeExtension(filePath, ".xlsx");
+                GuardarExcel(excelFilePath);
+            }
+        }
+
+        // Método para guardar las notas en un archivo Excel (.xlsx)
+        private void GuardarExcel(string filePath)
+        {
+            using (var package = new ExcelPackage(new FileInfo(filePath)))
+            {
+                var worksheet = package.Workbook.Worksheets.Add("Notas");
+                worksheet.Cells[1, 1].Value = "Título";
+                worksheet.Cells[1, 2].Value = "Descripción";
+                worksheet.Cells[1, 3].Value = "Color";
+
+                int row = 2; // Empezamos en la segunda fila
+                foreach (var nota in Notas)
+                {
+                    worksheet.Cells[row, 1].Value = nota.Titulo;
+                    worksheet.Cells[row, 2].Value = nota.Descripcion;
+                    worksheet.Cells[row, 3].Value = nota.Color;
+                    row++;
+                }
+
+                package.Save();
+            }
+        }
+
+        public void ImportarNotas_Click(object sender, RoutedEventArgs e)
+        {
+            // Abrir el explorador de archivos para seleccionar el archivo .notasunison
+            OpenFileDialog openFileDialog = new OpenFileDialog
+            {
+                Filter = "Archivos de notas (*.notasunison)|*.notasunison",
+                Title = "Seleccionar archivo de notas"
+            };
+
+            if (openFileDialog.ShowDialog() == true)
+            {
+                // Leer el contenido del archivo seleccionado
+                string filePath = openFileDialog.FileName;
+
+                // Procesar las notas del archivo (asumimos un formato simple de texto, puedes ajustarlo)
+                var lineas = File.ReadAllLines(filePath);
+
+                foreach (var linea in lineas)
+                {
+                    var partes = linea.Split('|'); // Suponiendo que las notas están separadas por '|'
+                    if (partes.Length == 3)  // Suponiendo que cada línea tiene Titulo|Descripcion|Color
+                    {
+                        var nota = new Nota
+                        {
+                            Titulo = partes[0],
+                            Descripcion = partes[1],
+                            Color = partes[2]
+                        };
+
+                        // Agregar la nota a la base de datos
+                        AgregarNotaBD(nota);
+
+                        // Agregar la nota a la colección ObservableCollection
+                        Notas.Add(nota);
+                    }
+                }
+            }
+        }
+
+        // Método para agregar una nota a la base de datos
+        private void AgregarNotaBD(Nota nota)
+        {
+            string connectionString = "Data Source=NotasDB.sqlite";
+            using (var connection = new SqliteConnection(connectionString))
+            {
+                connection.Open();
+                string query = "INSERT INTO Notas (Titulo, Descripcion, Color) VALUES (@Titulo, @Descripcion, @Color)";
+                using (var command = new SqliteCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@Titulo", nota.Titulo);
+                    command.Parameters.AddWithValue("@Descripcion", nota.Descripcion);
+                    command.Parameters.AddWithValue("@Color", nota.Color);
+                    command.ExecuteNonQuery();
+                }
+                connection.Close();
+            }
+        }
     }
 }

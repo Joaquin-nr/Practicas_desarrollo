@@ -23,8 +23,8 @@
         <StackPanel Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="0,436,0,0">
             <Button Content="Agregar Nota" Click="GoToAgregarNota_click" Margin="5"/>
             <Button Content="Abrir" Click="EditarNota_Click" Margin="5"/>
-            <Button Content="Importar Notas" Command="{Binding ImportarCommand}" Margin="5"/>
-            <Button Content="Exportar Notas" Command="{Binding ExportarCommand}" Margin="5"/>
+            <Button Content="Importar Notas" Click="ImportarNotas_Click" Margin="5"/>
+            <Button Content="Exportar Notas" Click="ExportarNotas_Click" Margin="5"/>
         </StackPanel>
     </Grid>
 </Window>

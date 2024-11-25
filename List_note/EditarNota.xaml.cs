@@ -10,15 +10,22 @@ namespace List_note
         public EditarNota(Nota nota)
         {
             InitializeComponent();
-            NotaSeleccionada = nota; // Pasamos la nota seleccionada
-            DataContext = this;     // Enlazamos el DataContext
+
+            NotaSeleccionada = nota ?? new Nota
+            {
+                Titulo = string.Empty,
+                Descripcion = string.Empty,
+                Color = "Rojo" // Color por defecto
+            };
+
+            DataContext = this; // Enlaza el DataContext con la ventana
         }
 
         // Botón Guardar
         private void GuardarNota_Click(object sender, RoutedEventArgs e)
         {
             // Aquí puedes implementar la lógica para actualizar la base de datos si es necesario.
-            MessageBox.Show("Nota guardada correctamente.", "Información", MessageBoxButton.OK, MessageBoxImage.Information);
+            MessageBox.Show($"Nota guardada correctamente","Información", MessageBoxButton.OK, MessageBoxImage.Information);
             this.Close(); // Cierra la ventana de edición
         }
 
@@ -31,7 +38,6 @@ namespace List_note
             {
                 this.Close(); // Cierra la ventana sin guardar                
             }
-            
         }
     }
 }
