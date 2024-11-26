@@ -4,7 +4,8 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="Agregar Nota" Height="550" Width="800">
+        Title="Agregar Nota" Height="550" Width="800"
+        Background="LightGray">
     <Grid Margin="20">
         <Grid.Resources>
             <x:Array x:Key="ColorOptions" Type="{x:Type SolidColorBrush}">

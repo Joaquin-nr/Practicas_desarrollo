@@ -5,11 +5,12 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:List_note"
         mc:Ignorable="d"
-        Title="MainWindow" Height="550" Width="800">
+        Title="MainWindow" Height="550" Width="800"
+        Background="LightGray">
     <Grid>
         <Image VerticalAlignment="Top" Margin="0,66,0,0" Height="152" Source="/IMAGEN/Logo_unison.gif" HorizontalAlignment="Center"/>
         <TextBlock Text="Notas Unison" HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="20" Margin="0,291,0,0"/>
-        <Button Content="Ir al Listado" HorizontalAlignment="Center" VerticalAlignment="Top" Click="GoToListado_click"  Margin="0,394,0,0"/>
+        <Button Content="Ir al Listado" HorizontalAlignment="Center" VerticalAlignment="Top" Click="GoToListado_click"  Margin="0,400,0,0" Height="40" Width="120"/>
         <TextBlock Text="Noriega Ramirez Joaquin Eduardo" HorizontalAlignment="Center" FontWeight="Bold" VerticalAlignment="Top" FontSize="20" Margin="0,450,0,0"/>
     </Grid>
 </Window>

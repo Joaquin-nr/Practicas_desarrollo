@@ -5,26 +5,41 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:List_note"
         mc:Ignorable="d"
-        Title="Listado_Notas" Height="550" Width="800">
-    <Grid>
+        Title="Listado_Notas" Height="550" Width="800"
+        Background="LightGray">
+    <Grid >
         <TextBlock Text="Lista de Notas" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="20" Margin="83,32,0,0"/>
         <TextBlock Text="Noriega Ramirez Joaquin Eduardo" HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="15" FontWeight="Bold" Margin="0,471,0,0"/>
-        <ListView ItemsSource="{Binding Notas}" SelectedItem="{Binding NotaSeleccionada}" Margin="83,64,83,103">
+        <ListView ItemsSource="{Binding Notas}" SelectedItem="{Binding NotaSeleccionada}" Margin="83,64,83,103" Background="LightGray" BorderThickness="0">
             <ListView.ItemTemplate>
-                <DataTemplate>
-                    <StackPanel Orientation="Horizontal" Background="{Binding Color}">
-                        <TextBlock Text="{Binding Titulo}" FontSize="16" Margin="10"/>                        
-                        <Button Content="🗑" Command="{Binding DataContext.EliminarNotaCommand, RelativeSource={RelativeSource AncestorType=Window}}" CommandParameter="{Binding}" Margin="5"/>
-                    </StackPanel>
+                <DataTemplate >
+                    <Border Margin="3" Padding="6" BorderBrush="LightGray" BorderThickness="2" CornerRadius="19">
+                        <Grid Background="{Binding Color}" Width="582" Height="30">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" Text="{Binding Titulo}" FontSize="16" VerticalAlignment="Center" Margin="5" />
+                            <Button Grid.Column="1" Content="🗑" 
+                                Command="{Binding DataContext.EliminarNotaCommand, RelativeSource={RelativeSource AncestorType=Window}}" 
+                                CommandParameter="{Binding}" 
+                                Width="30" Height="30" 
+                                HorizontalAlignment="Right" VerticalAlignment="Center" 
+                                Margin="5" 
+                                Background="Transparent" 
+                                BorderBrush="Transparent" 
+                                ToolTip="Eliminar Nota" />
+                        </Grid>
+                    </Border>    
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
 
-        <StackPanel Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="0,436,0,0">
-            <Button Content="Agregar Nota" Click="GoToAgregarNota_click" Margin="5"/>
-            <Button Content="Abrir" Click="EditarNota_Click" Margin="5"/>
-            <Button Content="Importar Notas" Click="ImportarNotas_Click" Margin="5"/>
-            <Button Content="Exportar Notas" Click="ExportarNotas_Click" Margin="5"/>
+        <StackPanel Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="0,430,0,0" >
+            <Button Content="Agregar Nota" Click="GoToAgregarNota_click" Margin="5" Width="90" Height="28"/>
+            <Button Content="Abrir" Click="EditarNota_Click" Margin="5" Width="90" Height="28"/>
+            <Button Content="Importar Notas" Click="ImportarNotas_Click" Margin="5" Width="90" Height="28"/>
+            <Button Content="Exportar Notas" Click="ExportarNotas_Click" Margin="5" Width="90" Height="28"/>
         </StackPanel>
     </Grid>
 </Window>
