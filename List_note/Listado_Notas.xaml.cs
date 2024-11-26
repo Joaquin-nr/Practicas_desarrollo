@@ -15,21 +15,19 @@ namespace List_note
         public ObservableCollection<Nota> Notas { get; set; }
         public Nota NotaSeleccionada { get; set; }
 
-        // Definimos el comando aquí en el código detrás
         public ICommand EliminarNotaCommand { get; set; }
 
         public Listado_Notas()
         {
             InitializeComponent();
             Notas = new ObservableCollection<Nota>();
-            DataContext = this;  // Establece el DataContext de la ventana
+            DataContext = this;  
 
             EliminarNotaCommand = new RelayCommand<Nota>(EliminarNota);
 
-            CargarNotas(); // Cargar las notas al iniciar
+            CargarNotas(); 
         }
 
-        // Clase para representar una nota
         public class Nota
         {
             public string Titulo { get; set; }
@@ -71,15 +69,12 @@ namespace List_note
         {
             if (nota == null) return;
 
-            // Mostrar el cuadro de confirmación
             var result = MessageBox.Show("¿Estás seguro de que deseas eliminar esta nota?", "Confirmar eliminación", MessageBoxButton.YesNo, MessageBoxImage.Warning);
 
             if (result == MessageBoxResult.Yes)
             {
-                // Eliminar de la colección observable
                 Notas.Remove(nota);
 
-                // Eliminar de la base de datos
                 EliminarNotaDeBD(nota);
             }
         }
@@ -106,9 +101,9 @@ namespace List_note
         // Método para ir a la ventana de agregar nota
         public void GoToAgregarNota_click(object sender, RoutedEventArgs e)
         {
-            var agregarNota = new Agregar_Nota(); // Crear instancia de la ventana Agregar Nota
-            agregarNota.Show(); // Mostrar la ventana Agregar Nota
-            this.Close(); // Cerrar la ventana actual
+            var agregarNota = new Agregar_Nota(); 
+            agregarNota.Show(); 
+            this.Close(); 
         }
 
         // Método para abrir la ventana de edición
@@ -120,16 +115,14 @@ namespace List_note
                 return;
             }
 
-            // Crear y mostrar la ventana de edición, pasando la nota seleccionada
             var ventanaEdicion = new EditarNota(NotaSeleccionada);
-            ventanaEdicion.ShowDialog(); // Mostrar como cuadro de diálogo
+            ventanaEdicion.ShowDialog(); 
 
-            // Después de editar, actualizamos la nota seleccionada en la colección
+            
             var notaEditada = Notas.FirstOrDefault(n => n.Titulo == NotaSeleccionada.Titulo && n.Descripcion == NotaSeleccionada.Descripcion);
             if (notaEditada != null)
             {
-                // La nota se ha actualizado automáticamente en la colección debido a la vinculación (binding)
-                // Si deseas forzar una actualización, puedes reemplazarla aquí:
+                
                 notaEditada.Color = NotaSeleccionada.Color;
                 notaEditada.Titulo = NotaSeleccionada.Titulo;
                 notaEditada.Descripcion = NotaSeleccionada.Descripcion;
@@ -190,7 +183,7 @@ namespace List_note
 
         public void ImportarNotas_Click(object sender, RoutedEventArgs e)
         {
-            // Abrir el explorador de archivos para seleccionar el archivo .notasunison
+            
             OpenFileDialog openFileDialog = new OpenFileDialog
             {
                 Filter = "Archivos de notas (*.notasunison)|*.notasunison",
@@ -199,16 +192,16 @@ namespace List_note
 
             if (openFileDialog.ShowDialog() == true)
             {
-                // Leer el contenido del archivo seleccionado
+                
                 string filePath = openFileDialog.FileName;
 
-                // Procesar las notas del archivo (asumimos un formato simple de texto, puedes ajustarlo)
+               
                 var lineas = File.ReadAllLines(filePath);
 
                 foreach (var linea in lineas)
                 {
-                    var partes = linea.Split('|'); // Suponiendo que las notas están separadas por '|'
-                    if (partes.Length == 3)  // Suponiendo que cada línea tiene Titulo|Descripcion|Color
+                    var partes = linea.Split('|'); 
+                    if (partes.Length == 3)  
                     {
                         var nota = new Nota
                         {
@@ -217,10 +210,10 @@ namespace List_note
                             Color = partes[2]
                         };
 
-                        // Agregar la nota a la base de datos
+                        
                         AgregarNotaBD(nota);
 
-                        // Agregar la nota a la colección ObservableCollection
+                        
                         Notas.Add(nota);
                     }
                 }

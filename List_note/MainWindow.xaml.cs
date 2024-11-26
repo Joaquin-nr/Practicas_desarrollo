@@ -5,9 +5,6 @@ using OfficeOpenXml;
 
 namespace List_note
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
     public partial class MainWindow : Window
     {
         public MainWindow()
@@ -19,10 +16,8 @@ namespace List_note
 
         private void CrearBaseDeDatosYTabla()
         {
-            // Ruta de la base de datos (se creará en el directorio del proyecto)
             string databasePath = "NotasDB.sqlite";
 
-            // Verificar si ya existe la base de datos
             if (!System.IO.File.Exists(databasePath))
             {
                 // Crear la base de datos
@@ -55,10 +50,9 @@ namespace List_note
 
         public void GoToListado_click(object sender, RoutedEventArgs e)
         {
-            // Navega a la ventana Listado de Notas
             var listadoNotas = new Listado_Notas();
             listadoNotas.Show();
-            this.Close(); // Cierra la ventana actual
+            this.Close(); 
         }
     }
 }
